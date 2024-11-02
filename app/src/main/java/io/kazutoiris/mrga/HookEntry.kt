@@ -32,6 +32,21 @@ object HookEntry : IYukiHookXposedInit {
             }
 
             try {
+                "com.bilibili.lib.blkv.internal.sp.BatchedSpImpl".toClass().method {
+                    name = "getLong"
+                }.hookAll {
+                    before {
+                        if (args(0).string()
+                                .startsWith("user_status_last_check_time")
+                        ) {
+                            result = Long.MAX_VALUE
+                        }
+                    }
+                }.onAllFailure { YLog.error(it.toString()) }
+            } catch (ignored: Exception) {
+            }
+
+            try {
                 "app.revanced.bilibili.patches.main.ApplicationDelegate".toClass().method {
                     returnType = ActivityClass
                 }.hook {
@@ -68,12 +83,27 @@ object HookEntry : IYukiHookXposedInit {
                         }
 
                         try {
+                            "com.bilibili.lib.blkv.internal.sp.BatchedSpImpl".toClass().method {
+                                name = "getLong"
+                            }.hookAll {
+                                before {
+                                    if (args(0).string()
+                                            .startsWith("user_status_last_check_time")
+                                    ) {
+                                        result = Long.MAX_VALUE
+                                    }
+                                }
+                            }.onAllFailure { YLog.error(it.toString()) }
+                        } catch (ignored: Exception) {
+                        }
+
+                        try {
                             "app.revanced.bilibili.patches.main.ApplicationDelegate".toClass()
                                 .method {
                                     returnType = ActivityClass
                                 }.hook {
-                                replaceTo(null)
-                            }.onAllFailure { YLog.error(it.toString()) }
+                                    replaceTo(null)
+                                }.onAllFailure { YLog.error(it.toString()) }
                         } catch (ignored: Exception) {
                         }
                     }
