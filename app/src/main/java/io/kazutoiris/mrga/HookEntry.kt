@@ -7,7 +7,6 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
-import com.highcapable.yukihookapi.hook.type.android.ActivityClass
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 
 @InjectYukiHookWithXposed
@@ -42,15 +41,6 @@ object HookEntry : IYukiHookXposedInit {
                             result = Long.MAX_VALUE
                         }
                     }
-                }.onAllFailure { YLog.error(it.toString()) }
-            } catch (ignored: Exception) {
-            }
-
-            try {
-                "app.revanced.bilibili.patches.main.ApplicationDelegate".toClass().method {
-                    returnType = ActivityClass
-                }.hook {
-                    replaceTo(null)
                 }.onAllFailure { YLog.error(it.toString()) }
             } catch (ignored: Exception) {
             }
@@ -94,16 +84,6 @@ object HookEntry : IYukiHookXposedInit {
                                     }
                                 }
                             }.onAllFailure { YLog.error(it.toString()) }
-                        } catch (ignored: Exception) {
-                        }
-
-                        try {
-                            "app.revanced.bilibili.patches.main.ApplicationDelegate".toClass()
-                                .method {
-                                    returnType = ActivityClass
-                                }.hook {
-                                    replaceTo(null)
-                                }.onAllFailure { YLog.error(it.toString()) }
                         } catch (ignored: Exception) {
                         }
                     }
